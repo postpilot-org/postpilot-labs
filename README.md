@@ -16,7 +16,7 @@ Run the commands below **one at a time** in Claude Code (paste one, press Enter,
 1. Install Claude Code (requires a paid Claude plan): `curl -fsSL https://claude.ai/install.sh | bash` (macOS/Linux) or `irm https://claude.ai/install.ps1 | iex` (Windows PowerShell), then run `claude`.
 2. **Add this marketplace** (use the full HTTPS URL — the `owner/repo` shorthand can trigger an SSH clone error):
    ```
-   /plugin marketplace add https://github.com/PostPilot-GTM/postpilot-labs.git
+   /plugin marketplace add https://github.com/postpilot-org/postpilot-labs.git
    ```
 3. **Install the tool(s) you want** (one at a time):
    ```
