@@ -5,6 +5,7 @@ Free, read-only marketing audit tools for DTC and ecommerce brands, built by [Po
 ## Tools in this marketplace
 
 - **klaviyo-customer-scoring** — an RFM customer-scoring audit for any Klaviyo account. Scores every customer on Recency, Frequency, and Monetary value; bins them into eight actionable segments (Champions, Loyal, Potential Loyalists, New, At Risk, Can't Lose Them, Hibernating, Lost); and delivers a self-contained HTML report with the value gap, revenue concentration, lifecycle and engagement bubble grids, and a sized direct-mail winback opportunity. Read-only; runs from your own read-only Klaviyo API key.
+- **klaviyo-email-dormancy-audit** — a one-page health check of any Klaviyo account. Shows what percentage of your email subscribers and buyers are actually active (clicked in the last 90 days), how that's trended, the revenue at risk from dormant customers, and the sized direct-mail winback opportunity. Read-only. Pairs with customer-scoring: dormancy tells you who's unreachable by email, scoring tells you who's worth reaching anyway.
 
 More free tools coming.
 
@@ -15,12 +16,13 @@ More free tools coming.
    ```
    /plugin marketplace add PostPilot-GTM/postpilot-labs
    ```
-3. **Install the tool:**
+3. **Install the tool(s) you want:**
    ```
    /plugin install klaviyo-customer-scoring@postpilot-labs
+   /plugin install klaviyo-email-dormancy-audit@postpilot-labs
    ```
-4. **Activate it:** `/reload-plugins`
-5. **Run it** — say "score my customers." The first run walks you through creating a **read-only** Klaviyo private API key; it's only used to read your own account and you can revoke it anytime.
+4. **Activate them:** `/reload-plugins`
+5. **Run it** — say "score my customers" (customer-scoring) or "audit my email list" (dormancy). The first run walks you through creating a **read-only** Klaviyo private API key; it's only used to read your own account and you can revoke it anytime.
 
 To update later: `/plugin marketplace update postpilot-labs`.
 
