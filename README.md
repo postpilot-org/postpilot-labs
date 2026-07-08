@@ -11,14 +11,18 @@ More free tools coming.
 
 ## How to install
 
-1. Install Claude Code — [claude.com/download](https://claude.com/download)
-2. **Add this marketplace:**
+Run the commands below **one at a time** in Claude Code (paste one, press Enter, wait, then the next — don't paste them as a block).
+
+1. Install Claude Code (requires a paid Claude plan): `curl -fsSL https://claude.ai/install.sh | bash` (macOS/Linux) or `irm https://claude.ai/install.ps1 | iex` (Windows PowerShell), then run `claude`.
+2. **Add this marketplace** (use the full HTTPS URL — the `owner/repo` shorthand can trigger an SSH clone error):
    ```
-   /plugin marketplace add PostPilot-GTM/postpilot-labs
+   /plugin marketplace add https://github.com/PostPilot-GTM/postpilot-labs.git
    ```
-3. **Install the tool(s) you want:**
+3. **Install the tool(s) you want** (one at a time):
    ```
    /plugin install klaviyo-customer-scoring@postpilot-labs
+   ```
+   ```
    /plugin install klaviyo-email-dormancy-audit@postpilot-labs
    ```
 4. **Activate them:** `/reload-plugins`

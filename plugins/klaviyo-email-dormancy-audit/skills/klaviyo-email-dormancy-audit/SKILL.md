@@ -1,13 +1,15 @@
 ---
 name: klaviyo-email-dormancy-audit
-description: Run a one-page health audit of a Klaviyo account that shows the marketer what % of their email subscribers and buyers are actually active (clicked an email in the last 90 days), how that's trended over 6 months, and the direct mail winback opportunity sized in dollars. Produces a two-page PostPilot-branded PDF. The audit reads four pre-built segments named "PostPilot Audit · ...". If those segments don't exist yet, the skill switches into setup mode and walks the user through building them (a one-time 5-minute Klaviyo configuration). Use this whenever someone asks about list health, list decay, engagement rate, dormancy, subscriber quality, "how is my Klaviyo doing," "what % of my list is active," "are my buyers still engaged," "is my list dying," or asks for an audit / scorecard / health check of their email program. Trigger even when the user uses adjacent language like "dormant customers," "ghost subscribers," "winback candidates," or "how engaged is my list."
+description: Run a one-page health audit of a Klaviyo account that shows the marketer what % of their email subscribers and buyers are actually active (clicked an email in the last 90 days), how that's trended over 6 months, and the direct mail winback opportunity sized in dollars. Produces a self-contained, shareable HTML report (no PDF, no dependencies to install). The audit reads four pre-built segments named "PostPilot Audit · ...". If those segments don't exist yet, the skill switches into setup mode and walks the user through building them (a one-time 5-minute Klaviyo configuration). Use this whenever someone asks about list health, list decay, engagement rate, dormancy, subscriber quality, "how is my Klaviyo doing," "what % of my list is active," "are my buyers still engaged," "is my list dying," or asks for an audit / scorecard / health check of their email program. Trigger even when the user uses adjacent language like "dormant customers," "ghost subscribers," "winback candidates," or "how engaged is my list."
 ---
 
 # Klaviyo Email Dormancy Audit
 
-Produces a two-page PostPilot-branded PDF showing what percentage of a brand's email subscribers and buyers are actually active, the 6-month engagement trend, and the dollar-sized direct mail winback opportunity.
+Produces a self-contained, shareable **HTML report** (opens in any browser; "Save as PDF" if a PDF is wanted) showing what percentage of a brand's email subscribers and buyers are actually active, the 6-month engagement trend, and the dollar-sized direct mail winback opportunity. No PDF toolchain, no reportlab/matplotlib, nothing to install — the bundled builder is pure Python standard library.
 
 The audit reads four specific segments by exact name. If they all exist, the audit runs in roughly 10 seconds. If any are missing, the skill switches to setup mode and outputs the segment definitions the user needs to build in Klaviyo's UI (one-time, about 5 minutes).
+
+"Active" means **clicked** an email in the last 90 days — a behavioral signal that is immune to Apple Mail Privacy Protection (opens are deliberately not used, since MPP auto-opens inflate them).
 
 ## The four required segments
 
@@ -93,21 +95,18 @@ The script will compute `annual_ltv = aov × ltv_multiplier`. Set `ltv_source: "
 
 **Critical: never let the opportunity band render empty.**
 
-The opportunity band on page 1 is the most important section of the audit. If you don't pass a valid `aov` to the PDF script, the band renders blank and the entire PDF is worthless. Two rules:
+The opportunity band is the most important section of the audit. If you don't pass a valid `aov` to the builder, the band loses its dollar figures. Two rules:
 
 1. Always include `aov` in the JSON payload. If the Placed Order query succeeds, compute and pass the real number. If it fails (no ecommerce integration, query errored, returned empty), pass `aov: 50` as a conservative DTC default. The script will mark it with an asterisk and note the estimate.
 2. If the trend query (Clicked Email monthly) returns empty, pass `trend_vals: []`. The script will hide the trend card cleanly and push the opportunity band up. Never pass empty cells inside `trend_vals` (no zeros, no nulls). Either real numbers or an empty array.
 
-**Audit math defaults (used automatically if you don't pass them):**
+**Winback sizing (computed by the builder — you don't pass these):**
 
-- `response_rate`: 5% (conservative industry-standard winback DM rate)
-- `send_cost`: $0.55 per piece (PostPilot pricing floor for 4x6 postcards)
-
-You can override either in the JSON payload, but the defaults are designed to be defensible without revealing PostPilot platform data. Do not cite specific brand counts, campaign volumes, or benchmark percentile breakdowns in the takeaways copy. That's competitive information PostPilot doesn't share publicly.
+The HTML builder sizes the direct-mail opportunity on **PostPilot platform medians**: a one-time send at the **7.6% median** response rate and an evergreen flow at the **13.7% top-quartile** rate, at **$0.64/piece** (4x6). The sensitivity table shows annualized net across the platform percentiles (25th 4.1% · median 7.6% · 75th 13.7% · 90th 22.4%). These match the klaviyo-customer-scoring tool so both audits quote the same benchmarks. Cite them as "PostPilot platform medians across thousands of brands and winback campaigns" — never specific brand counts or campaign volumes.
 
 ### Step 4: Compose the audit data
 
-Build a JSON object with the numeric fields. The script renders the entire page 2 narrative ("Five moves to fix this") deterministically based on the data you pass, so you don't need to write takeaway copy.
+Build a JSON object with the numeric fields. The builder renders the whole report deterministically from the data you pass, so you don't need to write any copy.
 
 ```json
 {
@@ -129,27 +128,27 @@ Build a JSON object with the numeric fields. The script renders the entire page 
 
 Set `lapsed_buyers` to `total_buyers - active_buyers`. We use the dormant-buyer count (buyers who haven't engaged with email in 90 days) as the direct mail audience. That's a reasonable winback target.
 
-The script computes the rest: the personalized intro line on page 2 (which framing depends on whether buyers are more/less/equally engaged vs subscribers), the four universal Klaviyo improvement moves, and the fifth move (direct mail) sized to the brand's actual `dormant_buyers` and `aov` numbers.
+The builder computes the rest: the active-percentage headline stats, the revenue-at-risk band (dormant buyers × annual LTV), and the direct-mail winback (one-time + evergreen + sensitivity) sized to the brand's actual `dormant_buyers` and `aov`.
 
-### Step 5: Run the PDF script
+### Step 5: Build the HTML report
 
-Write the JSON to a temp file, then call the bundled script:
+Write the JSON to a temp file, then call the bundled builder (pure standard library — nothing to install):
 
 ```bash
-python3 "${PLUGIN_DIR}/skills/klaviyo-email-dormancy-audit/scripts/build_audit_pdf.py" \
+python3 "${PLUGIN_DIR}/skills/klaviyo-email-dormancy-audit/scripts/build_audit_html.py" \
   --input /tmp/audit_data.json \
-  --output /tmp/klaviyo_audit.pdf
+  --output /tmp/klaviyo_audit.html
 ```
 
-Resolve `${PLUGIN_DIR}` from the location of this SKILL.md (script lives at `scripts/build_audit_pdf.py` next to it). If reportlab or matplotlib isn't installed, run `pip install --break-system-packages reportlab matplotlib pypdf` and retry.
+Resolve `${PLUGIN_DIR}` from the location of this SKILL.md (builder lives at `scripts/build_audit_html.py` next to it). It embeds the PostPilot logo from `assets/` automatically and needs no fonts or PDF toolchain.
 
-### Step 6: Present the PDF
+### Step 6: Present the HTML report
 
-Copy the PDF to the user's workspace folder with a filename like `<AccountName>_Klaviyo_Email_Dormancy_Audit.pdf`. Use `present_files` if available. Then give a one-paragraph summary in chat: the two headline percentages, the revenue-at-risk number, and one interpretive sentence. Don't restate the PDF.
+Copy the `.html` to the user's workspace with a filename like `<AccountName>_Klaviyo_Email_Dormancy_Audit.html`, and present it (in Cowork, via `present_files`). Tell them it opens in any browser and "Save as PDF" makes a PDF if they want one. Then give a one-paragraph summary in chat: the two headline percentages, the revenue-at-risk number, and one interpretive sentence. Don't restate the report. In Cowork you may also `create_artifact` a live version from the same JSON.
 
 ## Edge cases
 
-- **No ecommerce integration (no Placed Order metric):** skip the buyer side. Set `total_buyers`, `active_buyers`, `aov`, `lapsed_buyers` to null. The PDF will render with only the subscriber-side data on page 1 and a different framing on page 2.
+- **No ecommerce integration (no Placed Order metric):** skip the buyer side. Set `total_buyers`, `active_buyers`, `aov`, `lapsed_buyers` to null. The report renders with only the subscriber-side stat (buyer gauge, revenue-at-risk, and winback sections are omitted).
 - **Account younger than 6 months:** shorten the trend window. If less than 3 months of data, set `trend_months` and `trend_vals` to empty lists and the script will skip the trend chart.
 - **Very small account (<10K subs):** percentages will be noisy. Add a one-line caveat in a takeaway.
 - **Buyer count > subscriber count:** the user probably built their segments wrong. Surface this as a data quality note and ask them to verify the segment definitions.
@@ -158,7 +157,7 @@ Copy the PDF to the user's workspace folder with a filename like `<AccountName>_
 
 - Does not create, modify, or delete any Klaviyo segments, lists, profiles, flows, or campaigns. Read-only.
 - Does not send any data outside the user's Klaviyo account.
-- Does not make predictive forecasts. The revenue-at-risk and DM-opportunity numbers are directional, computed from conservative defaults (5% response rate, $0.55 per piece) and the account's actual AOV.
+- Does not make predictive forecasts. The revenue-at-risk and DM-opportunity numbers are directional, computed from conservative defaults (5% response rate, $0.64 per piece) and the account's actual AOV.
 
 ---
 
