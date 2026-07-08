@@ -1,0 +1,21 @@
+{
+  "name": "klaviyo-email-dormancy-audit",
+  "version": "0.1.0",
+  "description": "Free one-page health audit of any Klaviyo account. Shows what percentage of email subscribers and buyers are actually active (clicked in 90 days), how that's trended, revenue at risk from dormant customers, and the sized direct mail winback opportunity.",
+  "author": {
+    "name": "PostPilot",
+    "email": "drew@postpilot.com"
+  },
+  "homepage": "https://postpilot.com",
+  "license": "MIT",
+  "keywords": [
+    "klaviyo",
+    "email",
+    "marketing",
+    "audit",
+    "dormancy",
+    "winback",
+    "direct-mail",
+    "ecommerce"
+  ]
+}

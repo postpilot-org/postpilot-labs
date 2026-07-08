@@ -13,6 +13,11 @@
       "name": "klaviyo-customer-scoring",
       "source": "./plugins/klaviyo-customer-scoring",
       "description": "Free RFM customer-scoring audit for any Klaviyo account. Read-only and self-service (uses your own read-only API key). Samples the buyer base representatively, uses true purchase recency, extrapolates to the full customer file, and outputs a self-contained HTML report: the value gap, revenue concentration, lifecycle + engagement bubble grids, and a sized direct-mail winback opportunity. Engagement is based on clicks/on-site (email opens flagged as Apple-MPP-inflated)."
+    },
+    {
+      "name": "klaviyo-email-dormancy-audit",
+      "source": "./plugins/klaviyo-email-dormancy-audit",
+      "description": "Free one-page health audit of any Klaviyo account. Shows what percentage of email subscribers and buyers are actually active (clicked in the last 90 days), how that's trended, the revenue at risk from dormant customers, and the sized direct-mail winback opportunity. Read-only; pairs with klaviyo-customer-scoring (dormancy tells you who's unreachable, scoring tells you who's worth reaching anyway)."
     }
   ]
 }
