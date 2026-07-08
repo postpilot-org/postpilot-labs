@@ -1,0 +1,25 @@
+{
+  "name": "klaviyo-customer-scoring",
+  "version": "1.4.0",
+  "description": "Free customer scoring audit for any Klaviyo account. Scores every customer 1-5 on Recency, Frequency, and Monetary value; bins them into eight actionable RFM segments (Champions, Loyal, At Risk, Can't Lose Them, Hibernating, Lost, New, Potential Loyalists); and delivers a self-contained HTML report with a revenue-concentration Pareto, a Lorenz curve, a segment table, and a sized direct-mail opportunity. Opens in any browser with zero dependencies (Save as PDF if you want a PDF). Read-only. Runs as a bundled local Python script driven by a Klaviyo read-only private API key (portable across accounts; first run walks you through key setup); completes large accounts in minutes. Recency comes from the Placed Order event stream; Monetary and frequency from profile predictive analytics.",
+  "author": {
+    "name": "PostPilot",
+    "url": "https://github.com/PostPilot-GTM/postpilot-labs"
+  },
+  "homepage": "https://www.postpilot.com/meet?utm_source=klaviyo-scoring-skill&utm_medium=plugin-manifest&utm_campaign=customer-scoring-audit",
+  "license": "MIT",
+  "keywords": [
+    "klaviyo",
+    "rfm",
+    "customer-scoring",
+    "segmentation",
+    "clv",
+    "vip",
+    "winback",
+    "retention",
+    "direct-mail",
+    "ecommerce",
+    "lifecycle",
+    "postpilot"
+  ]
+}

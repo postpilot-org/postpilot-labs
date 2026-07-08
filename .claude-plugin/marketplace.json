@@ -1,0 +1,18 @@
+{
+  "name": "postpilot-labs",
+  "owner": {
+    "name": "PostPilot",
+    "url": "https://github.com/PostPilot-GTM/postpilot-labs"
+  },
+  "metadata": {
+    "description": "PostPilot Labs — free, read-only marketing audit tools for DTC and ecommerce brands. Point Claude at your own store's data and get a shareable report in minutes. No data leaves your account.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "klaviyo-customer-scoring",
+      "source": "./plugins/klaviyo-customer-scoring",
+      "description": "Free RFM customer-scoring audit for any Klaviyo account. Read-only and self-service (uses your own read-only API key). Samples the buyer base representatively, uses true purchase recency, extrapolates to the full customer file, and outputs a self-contained HTML report: the value gap, revenue concentration, lifecycle + engagement bubble grids, and a sized direct-mail winback opportunity. Engagement is based on clicks/on-site (email opens flagged as Apple-MPP-inflated)."
+    }
+  ]
+}
